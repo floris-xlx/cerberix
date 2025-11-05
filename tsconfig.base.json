@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "baseUrl": ".",
+    "paths": {
+      "@cerberix/config": ["packages/config/src"],
+      "@cerberix/db": ["packages/db/src"],
+      "@cerberix/types": ["packages/types/src"],
+      "@cerberix/queue": ["packages/queue/src"],
+      "@cerberix/utils": ["packages/utils/src"]
+    }
+  }
+}
+
+

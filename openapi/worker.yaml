@@ -1,0 +1,43 @@
+openapi: 3.1.0
+info:
+  title: Cerberix Worker API
+  version: 0.1.0
+  description: API for event ingestion, delivery replay, and health.
+servers:
+  - url: http://localhost:4001
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+  /api/v1/events:
+    post:
+      summary: Ingest event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type, payload]
+              properties:
+                type: { type: string }
+                payload: { type: object, additionalProperties: true }
+                idempotencyKey: { type: string }
+                metadata: { type: object, additionalProperties: true }
+      responses:
+        '200': { description: Queued }
+  /api/v1/deliveries/{id}/replay:
+    post:
+      summary: Replay delivery
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Replay queued }
+
+

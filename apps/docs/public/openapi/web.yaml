@@ -1,0 +1,88 @@
+openapi: 3.1.0
+info:
+  title: Cerberix Admin Web API
+  version: 0.1.0
+  description: Planned Admin API for authentication, projects, and subscriptions.
+servers:
+  - url: http://localhost:3000
+    description: Local web
+paths:
+  /api/auth/register:
+    post:
+      summary: Register user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200': { description: Registered }
+  /api/auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+      responses:
+        '200': { description: Logged in }
+  /api/projects:
+    get:
+      summary: List projects
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, slug]
+              properties:
+                name: { type: string }
+                slug: { type: string }
+      responses:
+        '200': { description: Created }
+  /api/subscriptions:
+    get:
+      summary: List subscriptions
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [projectId, name, eventType, targetUrl, secret]
+              properties:
+                projectId: { type: string }
+                name: { type: string }
+                eventType: { type: string }
+                targetUrl: { type: string, format: uri }
+                secret: { type: string }
+                maxRetries: { type: integer }
+                retryBackoffBaseSeconds: { type: integer }
+      responses:
+        '200': { description: Created }
+

@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cerberix_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cerberix
+      POSTGRES_PASSWORD: cerberix
+      POSTGRES_DB: cerberix
+    ports:
+      - "55432:5432"
+    volumes:
+      - cerberix_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cerberix"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks:
+      - cerberix_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: cerberix_redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "36379:6379"
+    volumes:
+      - cerberix_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - cerberix_net
+
+volumes:
+  cerberix_pg_data:
+  cerberix_redis_data:
+
+networks:
+  cerberix_net:
+    driver: bridge
+
+

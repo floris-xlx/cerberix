@@ -1,0 +1,25 @@
+openapi: 3.1.0
+info:
+  title: Cerberix Admin Web API
+  version: 0.1.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /api/auth/register:
+    post:
+      summary: Register user
+      responses:
+        '200': { description: Registered }
+  /api/auth/login:
+    post:
+      summary: Login
+      responses:
+        '200': { description: Logged in }
+  /api/projects:
+    get: { summary: List projects, responses: { '200': { description: OK } } }
+    post: { summary: Create project, responses: { '200': { description: Created } } }
+  /api/subscriptions:
+    get: { summary: List subscriptions, responses: { '200': { description: OK } } }
+    post: { summary: Create subscription, responses: { '200': { description: Created } } }
+
+

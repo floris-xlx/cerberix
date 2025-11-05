@@ -1,0 +1,18 @@
+## API Reference
+
+OpenAPI specs:
+
+- Worker API: `/openapi/worker.yaml`
+- Web Admin API: `/openapi/web.yaml`
+
+### Ingestion example
+
+```bash
+curl -X POST http://localhost:4001/api/v1/events \
+  -H "X-Project-Key: <public>" \
+  -H "Authorization: Bearer <secret>" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"user.created","payload":{"id":"u_123"}}'
+```
+
+
