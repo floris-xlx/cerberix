@@ -14,12 +14,14 @@
     "@cerberix/db": "workspace:*",
     "@cerberix/types": "workspace:*",
     "@cerberix/utils": "workspace:*",
+    "drizzle-orm": "^0.33.0",
     "jose": "^5.10.0",
     "lucide-react": "^0.469.0",
     "next": "^14.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "recharts": "^2.12.7"
+    "recharts": "^2.12.7",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",

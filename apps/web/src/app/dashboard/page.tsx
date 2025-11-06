@@ -1,7 +1,7 @@
 import { db } from '@cerberix/db';
 import * as tables from '@cerberix/db/src/schema';
 import { generateApiKeyPair } from '@cerberix/utils';
-import { getSession } from '@/src/lib/auth';
+import { getSession } from '@/lib/auth';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
@@ -13,7 +13,9 @@ export default async function DashboardPage() {
     'use server';
     const name = String(formData.get('name') || '');
     const slug = String(formData.get('slug') || '');
-    const parsed = z.object({ name: z.string().min(1), slug: z.string().min(1) }).safeParse({ name, slug });
+    const parsed = z
+      .object({ name: z.string().min(1), slug: z.string().min(1) })
+      .safeParse({ name, slug });
     if (!parsed.success) return;
     const keys = generateApiKeyPair();
     await db.insert(tables.projects).values({
@@ -23,7 +25,7 @@ export default async function DashboardPage() {
       slug,
       apiKeyPublic: keys.publicKey,
       apiKeySecretHash: keys.secretHash,
-      plan: 'FREE'
+      plan: 'FREE',
     });
   }
 
@@ -37,18 +39,34 @@ export default async function DashboardPage() {
       .where(eq(tables.projects.id, id));
   }
 
-  const projects = await db.select().from(tables.projects).where(eq(tables.projects.ownerId, userId));
+  const projects = await db
+    .select()
+    .from(tables.projects)
+    .where(eq(tables.projects.ownerId, userId));
+
   const first = projects[0];
-  let stats: { events24h: number; deliveries24h: number; successRate: number } | null = null;
+  let stats: {
+    events24h: number;
+    deliveries24h: number;
+    successRate: number;
+  } | null = null;
   if (first) {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const [{ count: evCount } = { count: 0 }] = (await db
-      // @ts-expect-error drizzle raw count
-      .execute(`select count(*)::int as count from events where project_id = $1 and created_at >= $2`, [first.id, since])) as any;
-    const [{ count: delCount } = { count: 0 }] = (await db
-      .execute(`select count(*)::int as count from deliveries where id in (select d.id from deliveries d join subscriptions s on s.id = d.subscription_id where s.project_id = $1) and created_at >= $2`, [first.id, since])) as any;
-    const [{ rate } = { rate: 0 }] = (await db
-      .execute(`select coalesce(avg(case when status = 'SUCCESS' then 1 else 0 end),0) as rate from deliveries d join subscriptions s on s.id = d.subscription_id where s.project_id = $1 and d.created_at >= $2`, [first.id, since])) as any;
+
+    const [{ count: evCount } = { count: 0 }] = (await db.execute(
+      `select count(*)::int as count from events where project_id = $1 and created_at >= $2`,
+      [first.id, since],
+    )) as any;
+
+    const [{ count: delCount } = { count: 0 }] = (await db.execute(
+      `select count(*)::int as count from deliveries where id in (select d.id from deliveries d join subscriptions s on s.id = d.subscription_id where s.project_id = $1) and created_at >= $2`,
+      [first.id, since],
+    )) as any;
+
+    const [{ rate } = { rate: 0 }] = (await db.execute(
+      `select coalesce(avg(case when status = 'SUCCESS' then 1 else 0 end),0) as rate from deliveries d join subscriptions s on s.id = d.subscription_id where s.project_id = $1 and d.created_at >= $2`,
+      [first.id, since],
+    )) as any;
     stats = { events24h: evCount, deliveries24h: delCount, successRate: Number(rate) };
   }
 
@@ -58,18 +76,30 @@ export default async function DashboardPage() {
       <div className="mt-4 grid md:grid-cols-2 gap-6">
         <form action={createProject} className="p-4 border rounded-md bg-foreground/5">
           <div className="text-secondary mb-2">Create Project</div>
-          <input name="name" placeholder="Name" className="w-full mb-2 px-3 py-2 bg-background border rounded-sm" />
-          <input name="slug" placeholder="Slug" className="w-full mb-2 px-3 py-2 bg-background border rounded-sm" />
+          <input
+            name="name"
+            placeholder="Name"
+            className="w-full mb-2 px-3 py-2 bg-background border rounded-sm"
+          />
+          <input
+            name="slug"
+            placeholder="Slug"
+            className="w-full mb-2 px-3 py-2 bg-background border rounded-sm"
+          />
           <button className="bg-brand text-white px-4 py-2 rounded-md shadow-none">Create</button>
         </form>
         <div className="space-y-3">
-          {projects.map((p) => (
+          {projects.map((p: (typeof projects)[0]) => (
             <form key={p.id} action={regen} className="p-4 border rounded-md bg-foreground/5">
               <div className="font-medium">{p.name}</div>
               <div className="text-sm text-secondary">{p.slug}</div>
-              <div className="text-sm mt-2">Public Key: <span className="text-secondary">{p.apiKeyPublic}</span></div>
+              <div className="text-sm mt-2">
+                Public Key: <span className="text-secondary">{p.apiKeyPublic}</span>
+              </div>
               <input type="hidden" name="id" value={p.id} />
-              <button className="mt-3 bg-background px-3 py-1 rounded-sm border shadow-none">Regenerate Keys</button>
+              <button className="mt-3 bg-background px-3 py-1 rounded-sm border shadow-none">
+                Regenerate Keys
+              </button>
             </form>
           ))}
         </div>
@@ -93,5 +123,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-
-
