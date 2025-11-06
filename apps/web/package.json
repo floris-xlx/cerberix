@@ -14,12 +14,12 @@
     "@cerberix/db": "workspace:*",
     "@cerberix/types": "workspace:*",
     "@cerberix/utils": "workspace:*",
-    "jose": "^5.9.6",
+    "jose": "^5.10.0",
     "lucide-react": "^0.469.0",
-    "recharts": "^2.12.7",
     "next": "^14.2.5",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
@@ -31,5 +31,3 @@
     "typescript": "^5.6.3"
   }
 }
-
-
