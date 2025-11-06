@@ -3,7 +3,15 @@
   "compilerOptions": {
     "jsx": "preserve",
     "types": ["node", "react", "react-dom"],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@cerberix/config": ["../../packages/config/src"],
+      "@cerberix/db": ["../../packages/db/src"],
+      "@cerberix/types": ["../../packages/types/src"],
+      "@cerberix/queue": ["../../packages/queue/src"],
+      "@cerberix/utils": ["../../packages/utils/src"]
+    }
   },
   "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules"]

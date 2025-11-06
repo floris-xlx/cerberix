@@ -1,8 +1,7 @@
-import { db } from '@cerberix/db';
-import * as tables from '@cerberix/db/src/schema';
+import { db, schema } from '@cerberix/db';
 import { verifyPassword } from '@cerberix/utils';
 import { z } from 'zod';
-import { setSession } from '@/src/lib/auth';
+import { setSession } from '@/lib/auth';
 import { eq } from 'drizzle-orm';
 
 export default function LoginPage() {
@@ -14,7 +13,11 @@ export default function LoginPage() {
       .object({ email: z.string().email(), password: z.string().min(8) })
       .safeParse({ email, password });
     if (!parsed.success) return;
-    const [user] = await db.select().from(tables.users).where(eq(tables.users.email, email)).limit(1);
+    const [user] = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.email, email))
+      .limit(1);
     if (!user) return;
     const ok = await verifyPassword(user.passwordHash, password);
     if (!ok) return;

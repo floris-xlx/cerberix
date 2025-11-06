@@ -1,8 +1,7 @@
-import { db } from '@cerberix/db';
-import * as tables from '@cerberix/db/src/schema';
+import { db, schema } from '@cerberix/db';
 import { generateId, hashPassword } from '@cerberix/utils';
 import { z } from 'zod';
-import { setSession } from '@/src/lib/auth';
+import { setSession } from '@/lib/auth';
 
 export default function RegisterPage() {
   async function action(formData: FormData) {
@@ -15,7 +14,7 @@ export default function RegisterPage() {
     if (!parsed.success) return;
     const id = generateId();
     const passwordHash = await hashPassword(password);
-    await db.insert(tables.users).values({ id, email, passwordHash });
+    await db.insert(schema.users).values({ id, email, passwordHash });
     await setSession(id);
   }
 
