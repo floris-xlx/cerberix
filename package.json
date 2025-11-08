@@ -20,6 +20,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "turbo": "^2.0.3",
@@ -27,5 +29,3 @@
     "vitest": "^1.5.3"
   }
 }
-
-
