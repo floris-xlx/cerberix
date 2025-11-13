@@ -10,12 +10,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mdx-js/react": "^3.0.1",
     "next": "^14.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "@next/mdx": "^14.2.5"
   },
   "devDependencies": {
+    "@mdx-js/loader": "^3.0.1",
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
