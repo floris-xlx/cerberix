@@ -1,0 +1,145 @@
+openapi: 3.1.0
+info:
+  title: Cerberix API
+  version: 0.1.0
+  description: Unified OpenAPI document for admin web and worker services.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+security:
+  - bearerAuth: []
+servers:
+  - url: https://api.cerberix.dev
+    description: Admin web API
+  - url: https://worker.cerberix.dev
+    description: Worker API
+paths:
+  /api/auth/register:
+    post:
+      summary: Register user
+      operationId: registerUser
+      responses:
+        "200":
+          description: Registered
+        "400":
+          description: Invalid input
+        "409":
+          description: User already exists
+  /api/auth/login:
+    post:
+      summary: Login
+      operationId: loginUser
+      responses:
+        "200":
+          description: Logged in
+        "400":
+          description: Invalid credentials
+  /api/projects:
+    get:
+      summary: List projects
+      operationId: listProjects
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+    post:
+      summary: Create project
+      operationId: createProject
+      responses:
+        "200":
+          description: Created
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+  /api/subscriptions:
+    get:
+      summary: List subscriptions
+      operationId: listSubscriptions
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+    post:
+      summary: Create subscription
+      operationId: createSubscription
+      responses:
+        "200":
+          description: Created
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      security: []
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Invalid request
+        "503":
+          description: Unhealthy
+  /api/v1/events:
+    post:
+      summary: Ingest event
+      operationId: ingestEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventIngestRequest"
+      responses:
+        "200":
+          description: Queued
+        "400":
+          description: Invalid payload
+        "401":
+          description: Unauthorized
+  /api/v1/deliveries/{id}/replay:
+    post:
+      summary: Replay delivery
+      operationId: replayDelivery
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Replay queued
+        "400":
+          description: Invalid delivery id
+        "401":
+          description: Unauthorized
+        "404":
+          description: Delivery not found
+components:
+  schemas:
+    EventIngestRequest:
+      type: object
+      required:
+        - type
+        - payload
+      properties:
+        type:
+          type: string
+        payload:
+          type: object
+          additionalProperties: true
+        idempotencyKey:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

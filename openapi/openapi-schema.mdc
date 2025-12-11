@@ -1,0 +1,11 @@
+# OpenAPI authoring guardrails
+
+- Always set `servers` to real domains or stage URLs, never localhost/example.
+- Include `info.license` with a valid `name` and `url`.
+- Every operation needs:
+  - `operationId` (unique, stable verbs like `loginUser`).
+  - At least one `4XX` response describing client errors.
+  - A `2XX` success response.
+- Define `security` at the root; only set `security: []` per-operation for truly public endpoints like `/health`.
+- Prefer reusable schemas in `components` and reference them with `$ref`.
+- Keep request/response bodies typed; mark required fields explicitly.
