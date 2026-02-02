@@ -45,5 +45,3 @@ volumes:
 networks:
   cerberix_net:
     driver: bridge
-
-
